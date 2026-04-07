@@ -59,6 +59,13 @@ class SupabaseService {
         .maybeSingle();
   }
 
+  // --- Instructors ---
+
+  static Future<List<InstructorModel>> getInstructors() async {
+    final data = await _client.from('instructors').select();
+    return (data as List).map((json) => InstructorModel.fromJson(json)).toList();
+  }
+
   // --- Categories ---
 
   static Future<List<CategoryModel>> getCategories() async {
@@ -92,6 +99,18 @@ class SupabaseService {
         .select('*, classes(*, categories(*)), instructors(*), bookings(*)')
         .lte('start_time', now)
         .gte('end_time', now);
+    return (data as List).map((json) => ScheduleModel.fromJson(json)).toList();
+  }
+
+  static Future<List<ScheduleModel>> getSchedulesByDate(DateTime date) async {
+    final startOfDay = DateTime(date.year, date.month, date.day).toUtc().toIso8601String();
+    final endOfDay = DateTime(date.year, date.month, date.day, 23, 59, 59).toUtc().toIso8601String();
+    final data = await _client
+        .from('class_schedules')
+        .select('*, classes(*, categories(*)), instructors(*), bookings(*)')
+        .gte('start_time', startOfDay)
+        .lte('start_time', endOfDay)
+        .order('start_time', ascending: true);
     return (data as List).map((json) => ScheduleModel.fromJson(json)).toList();
   }
 
