@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:mi_gym_flutter/providers/user_session.dart';
 import 'package:mi_gym_flutter/screens/auth/login_page.dart';
 import 'package:mi_gym_flutter/screens/admin/admin_profile_page.dart';
+import 'package:mi_gym_flutter/screens/admin/admin_calendar_page.dart';
 import 'package:mi_gym_flutter/screens/admin/create_edit_class_page.dart';
 import 'package:mi_gym_flutter/screens/admin/tabs/admin_classes_page.dart';
 import 'package:mi_gym_flutter/screens/admin/tabs/admin_users_page.dart';
@@ -405,7 +406,12 @@ class _AdminPageState extends State<AdminPage> {
               ),
             ),
             const SizedBox(width: 12),
-            Expanded(child: _buildActionButton('Calendar', Icons.event, false)),
+            Expanded(child: _buildActionButton('Calendar', Icons.event, false, onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AdminCalendarPage()),
+              );
+            })),
           ],
         ),
       ],

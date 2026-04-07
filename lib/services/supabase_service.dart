@@ -59,12 +59,6 @@ class SupabaseService {
         .maybeSingle();
   }
 
-  // --- Instructors ---
-
-  static Future<List<InstructorModel>> getInstructors() async {
-    final data = await _client.from('instructors').select();
-    return (data as List).map((json) => InstructorModel.fromJson(json)).toList();
-  }
 
   // --- Categories ---
 
@@ -199,6 +193,7 @@ class SupabaseService {
     String? categoryId,
     String intensity = 'Medium',
     required int durationMinutes,
+    int capacity = 20,
     double basePrice = 0.00,
   }) async {
     final data = await _client
@@ -210,6 +205,7 @@ class SupabaseService {
           'category_id': categoryId,
           'intensity': intensity,
           'duration_minutes': durationMinutes,
+          'capacity': capacity,
           'base_price': basePrice,
         })
         .select()
@@ -225,6 +221,7 @@ class SupabaseService {
     String? categoryId,
     String intensity = 'Medium',
     required int durationMinutes,
+    int capacity = 20,
     double basePrice = 0.00,
   }) async {
     await _client
@@ -236,6 +233,7 @@ class SupabaseService {
           'category_id': categoryId,
           'intensity': intensity,
           'duration_minutes': durationMinutes,
+          'capacity': capacity,
           'base_price': basePrice,
         })
         .eq('id', classId);
@@ -246,6 +244,10 @@ class SupabaseService {
   }
 
   // --- Schedule CRUD ---
+
+  static Future<void> createSchedulesBulk(List<Map<String, dynamic>> schedules) async {
+    await _client.from('class_schedules').insert(schedules);
+  }
 
   static Future<ScheduleModel> createSchedule({
     required String classId,

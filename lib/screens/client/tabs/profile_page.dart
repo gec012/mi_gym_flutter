@@ -4,6 +4,8 @@ import 'package:mi_gym_flutter/domain/entities/user_entity.dart';
 import 'package:mi_gym_flutter/domain/entities/booking_entity.dart';
 import 'package:mi_gym_flutter/services/supabase_service.dart';
 import 'package:mi_gym_flutter/screens/client/edit_profile_page.dart';
+import 'package:mi_gym_flutter/screens/client/client_history_page.dart';
+import 'package:mi_gym_flutter/screens/client/client_membership_page.dart';
 import 'package:mi_gym_flutter/theme/app_colors.dart';
 import 'package:mi_gym_flutter/widgets/shared/change_password_sheet.dart';
 
@@ -115,7 +117,23 @@ class _ProfilePageState extends State<ProfilePage> {
                     color: AppColors.slate800.withValues(alpha: 0.4),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.settings, color: Colors.white, size: 22),
+                  child: IconButton(
+                    icon: const Icon(Icons.edit, color: AppColors.slate400),
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditProfilePage(
+                          profile: user != null ? {
+                            'id': user.id,
+                            'full_name': user.fullName,
+                            'avatar_url': user.avatarUrl,
+                            'role': user.role,
+                          } : null,
+                          onProfileUpdated: () => widget.onRefresh?.call(),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -274,13 +292,13 @@ class _ProfilePageState extends State<ProfilePage> {
                 _buildSettingsItem(
                   Icons.credit_card, 
                   'Membresía y Pagos', 
-                  () => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Próximamente')))
+                  () => Navigator.push(context, MaterialPageRoute(builder: (context) => const ClientMembershipPage()))
                 ),
                 const SizedBox(height: 8),
                 _buildSettingsItem(
                   Icons.history, 
                   'Historial de Entrenamiento', 
-                  () => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Próximamente')))
+                  () => Navigator.push(context, MaterialPageRoute(builder: (context) => const ClientHistoryPage()))
                 ),
               ],
             ),

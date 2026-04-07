@@ -8,6 +8,7 @@ class ClassModel {
   final String? categoryId;
   final String intensity;
   final int durationMinutes;
+  final int capacity;
   final double basePrice;
   final CategoryModel? category;
 
@@ -19,6 +20,7 @@ class ClassModel {
     this.categoryId,
     this.intensity = 'Medium',
     required this.durationMinutes,
+    this.capacity = 20,
     this.basePrice = 0.0,
     this.category,
   });
@@ -31,7 +33,8 @@ class ClassModel {
       imageUrl: json['image_url'] as String?,
       categoryId: json['category_id'] as String?,
       intensity: json['intensity'] as String? ?? 'Medium',
-      durationMinutes: json['duration_minutes'] as int,
+      durationMinutes: (json['duration_minutes'] as num?)?.toInt() ?? 60,
+      capacity: (json['capacity'] as num?)?.toInt() ?? 20,
       basePrice: (json['base_price'] as num?)?.toDouble() ?? 0.0,
       category: json['categories'] != null
           ? CategoryModel.fromJson(json['categories'])
@@ -48,6 +51,7 @@ class ClassModel {
       'category_id': categoryId,
       'intensity': intensity,
       'duration_minutes': durationMinutes,
+      'capacity': capacity,
       'base_price': basePrice,
     };
   }

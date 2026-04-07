@@ -78,7 +78,9 @@ class _CreateEditClassPageState extends State<CreateEditClassPage> {
     _descriptionController = TextEditingController(
       text: data?.description ?? '',
     );
-    _capacityController = TextEditingController();
+    _capacityController = TextEditingController(
+      text: data != null ? data.capacity.toString() : '20',
+    );
     _durationController = TextEditingController(
       text: data != null ? data.durationMinutes.toString() : '',
     );
@@ -190,6 +192,8 @@ class _CreateEditClassPageState extends State<CreateEditClassPage> {
           ? _imageUrlController.text.trim()
           : null;
 
+      final capacity = int.tryParse(_capacityController.text.trim()) ?? 20;
+
       if (widget.isEditing) {
         // --- UPDATE class ---
         await SupabaseService.updateClass(
@@ -200,6 +204,7 @@ class _CreateEditClassPageState extends State<CreateEditClassPage> {
           categoryId: _selectedCategoryId,
           intensity: _selectedIntensity,
           durationMinutes: duration,
+          capacity: capacity,
           basePrice: price,
         );
       } else {
@@ -211,6 +216,7 @@ class _CreateEditClassPageState extends State<CreateEditClassPage> {
           categoryId: _selectedCategoryId,
           intensity: _selectedIntensity,
           durationMinutes: duration,
+          capacity: capacity,
           basePrice: price,
         );
 
@@ -412,7 +418,7 @@ class _CreateEditClassPageState extends State<CreateEditClassPage> {
                               _buildTextField(
                                 label: 'MAX CAPACITY',
                                 controller: _capacityController,
-                                hint: 'e.g. 25',
+                                hint: 'e.g. 20',
                                 icon: Icons.groups_outlined,
                                 keyboardType: TextInputType.number,
                               ),
